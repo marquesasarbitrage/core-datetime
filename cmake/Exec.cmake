@@ -1,3 +1,6 @@
 # tests DateTime and TimeDelta
-add_executable(datetime-test1 ${CMAKE_CURRENT_SOURCE_DIR}/tests/test1.cpp)
-target_link_libraries(datetime-test1 PUBLIC cpp-datetime)
+add_executable(datetime-datetime ${CMAKE_CURRENT_SOURCE_DIR}/tests/datetime.cpp)
+target_link_libraries(datetime-datetime PUBLIC cpp-datetime)
+
+add_executable(datetime-tools ${CMAKE_CURRENT_SOURCE_DIR}/tests/tools.cpp)
+target_link_libraries(datetime-tools PUBLIC cpp-datetime)

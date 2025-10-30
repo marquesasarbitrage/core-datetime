@@ -65,5 +65,66 @@ namespace DateTimeTools {
         long long timestampAsLong = static_cast<long long>(timegm(local_tm)); 
         return DateTime(timestampAsLong, EpochTimestampType::SECONDS);
     }
+
+    Sequence::Sequence() = default;
+    Sequence::Sequence(const std::set<DateTime>& sequence): sequence_(sequence){};
+
+    int Sequence::getLength() const {return sequence_.size();}
+    bool Sequence::isExisting(const DateTime& referenceTime) const {return sequence_.find(referenceTime) != sequence_.end();}
+    std::shared_ptr<DateTime> Sequence::getStart() const {if (sequence_.empty()) return nullptr; return std::make_shared<DateTime>(*sequence_.begin());}
+    std::shared_ptr<DateTime> Sequence::getEnd() const {if (sequence_.empty()) return nullptr; return std::make_shared<DateTime>(*sequence_.rbegin());}
+
+    void Sequence::add(const DateTime& date) {sequence_.insert(date);}
+    void Sequence::remove(const DateTime& date) {sequence_.erase(date);}
+
+    std::shared_ptr<DateTime> Sequence::getNext(const DateTime& referenceTime) const 
+    {
+        if (sequence_.empty()) return nullptr;
+        auto it = sequence_.upper_bound(referenceTime);
+        if (it == sequence_.end()) return nullptr;
+        return std::make_shared<DateTime>(*it);
+    }
+
+    std::shared_ptr<DateTime> Sequence::getLast(const DateTime& referenceTime) const 
+    {
+        if (sequence_.empty())return nullptr;
+        auto it = sequence_.lower_bound(referenceTime);
+        if (it == sequence_.begin()) return nullptr;
+        if (it == sequence_.end() || *it != referenceTime)
+            --it;
+        if (*it == referenceTime) --it;
+        return std::make_shared<DateTime>(*it);
+    }
+
+    int Sequence::getIndex(const DateTime& referenceTime) const {
+        auto it = sequence_.find(referenceTime);
+        if (it == sequence_.end()) return -1;
+        return static_cast<int>(std::distance(sequence_.begin(), it));
+    }
+
+    Sequence Sequence::getSubSequence(int startIndex, int endIndex)
+    {
+        int n = getLength();
+        startIndex = std::max(0,std::min(startIndex, n)), endIndex = std::max(0,std::min(endIndex, n)); 
+        Sequence subSequence;
+        if (sequence_.empty() or startIndex>=endIndex) ; 
+        else {    
+            int idx = 0;
+            for (const auto& dt : sequence_) {
+                if (idx >= startIndex && idx <= endIndex) subSequence.add(dt);
+                if (idx == endIndex) break;
+                idx++;
+            }
+        }
+        return subSequence;
+    }
+
+    Sequence Sequence::getSubSequence(const DateTime& startDate, const DateTime& endDate)
+    {
+        return getSubSequence(getIndex(startDate), getIndex(endDate));
+    }
+
+    std::set<DateTime> Sequence::getDataset() const {return sequence_;}
+
     
 };

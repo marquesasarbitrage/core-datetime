@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "../include/cpp-datetime/datetime.hpp"
-#include "../include/cpp-datetime/errors.hpp"
+#include "../include/core-datetime/datetime.hpp"
+#include "../include/core-datetime/errors.hpp"
 
 void testTimeDelta() {
     // Test constructor and getters

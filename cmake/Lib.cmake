@@ -5,4 +5,4 @@ add_library(cpp-datetime
         src/errors.cpp
         src/tools.cpp)
 
-target_include_directories(cpp-datetime PUBLIC include)
+target_include_directories(core-datetime PUBLIC include)

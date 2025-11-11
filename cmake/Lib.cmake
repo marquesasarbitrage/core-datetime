@@ -1,4 +1,4 @@
-add_library(cpp-datetime 
+add_library(core-datetime 
     STATIC 
         src/datetime.cpp
         src/timedelta.cpp

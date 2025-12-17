@@ -158,9 +158,73 @@ void testSequenceObject()
     std::cout << "All Sequence object tests has been passed." << std::endl; 
 }
 
+void testGetFromString() {
+
+    std::string basicDate1 = "2025-12-18"; 
+    std::string basicDate1Reverse = "2025-18-12"; 
+
+    assert(DateTimeTools::getFromString(basicDate1, "YYYY-MM-DD").getTimestamp()==1766016000);
+    assert(DateTimeTools::getFromString(basicDate1Reverse, "YYYY-DD-MM").getTimestamp()==1766016000);
+
+    std::string hedgeCase1 = "2028-02-29"; 
+    assert(DateTimeTools::getFromString(hedgeCase1, "YYYY-MM-DD").getTimestamp()==1835395200);
+
+    std::string hedgeCase2 = "2028-2-29"; 
+    assert(DateTimeTools::getFromString(hedgeCase2, "YYYY-MM-DD").getTimestamp()==1835395200);
+
+    try {
+        std::string hedgeCase3 = "1899-02-29"; 
+        DateTime date = DateTimeTools::getFromString(hedgeCase3, "YYYY-MM-DD");
+        assert(false);
+    } catch (const InvalidDateValueError& e) {
+
+        assert(true);
+    }
+
+    try {
+        std::string hedgeCase4 = "2025-02-29"; 
+        DateTime date = DateTimeTools::getFromString(hedgeCase4, "YYYY-MM-DD");
+        std::cout << date.getTimestamp() << std::endl;
+        assert(false);
+    } catch (const InvalidDateValueError& e) {
+
+        assert(true);
+    }
+
+    std::string hedgeCase5 = "2025-07-31"; 
+    assert(DateTimeTools::getFromString(hedgeCase5, "YYYY-MM-DD").getTimestamp()==1753920000);
+
+    std::string hedgeCase6 = "2025-09-30"; 
+    assert(DateTimeTools::getFromString(hedgeCase6, "YYYY-MM-DD").getTimestamp()==1759190400);
+
+    try {
+        std::string hedgeCase7 = "2025-07-32"; 
+        DateTime date = DateTimeTools::getFromString(hedgeCase7, "YYYY-MM-DD");
+        std::cout << date.getTimestamp() << std::endl;
+        assert(false);
+    } catch (const InvalidDateValueError& e) {
+
+        assert(true);
+    }
+
+    try {
+        std::string hedgeCase8 = "2025-09-31"; 
+        DateTime date = DateTimeTools::getFromString(hedgeCase8, "YYYY-MM-DD");
+        std::cout << date.getTimestamp() << std::endl;
+        assert(false);
+    } catch (const InvalidDateValueError& e) {
+
+        assert(true);
+    }
+
+
+    std::cout << "All string to DateTime tests has been passed." << std::endl; 
+}
+
 int main()
 {
     testFunctions();
     testSequenceObject();
+    testGetFromString();
     return 0; 
 }

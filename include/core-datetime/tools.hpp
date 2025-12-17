@@ -15,6 +15,7 @@ namespace DateTimeTools {
     TimeDelta getTimeInLeapYear(const DateTime& startDate, const DateTime& endDate);
     DateTime getMidnightDateTime(const DateTime& date);
     DateTime getYearBeginningDate(const DateTime& date);
+    DateTime getFromString(std::string dateString, std::string format);
 
     class Sequence 
     {
@@ -41,5 +42,7 @@ namespace DateTimeTools {
             std::set<DateTime> sequence_;
 
     };
+
+
 };
 

@@ -126,5 +126,59 @@ namespace DateTimeTools {
 
     std::set<DateTime> Sequence::getDataset() const {return sequence_;}
 
-    
+    DateTime getFromString(std::string dateString, std::string format) {
+
+        std::tm tm{};
+        int y, m, d;
+
+        sscanf(dateString.c_str(), "%d-%d-%d", &y, &m, &d);
+
+        if (format == "YYYY-MM-DD") {sscanf(dateString.c_str(), "%d-%d-%d", &y, &m, &d);} 
+
+        else if (format == "YYYY-DD-MM") {sscanf(dateString.c_str(), "%d-%d-%d", &y, &d, &m);} 
+        
+        else throw InvalidDateFormatError(format);
+
+
+        if (y < 1900) throw InvalidDateValueError(dateString); 
+
+        else { 
+            if (m < 1 || m > 12) throw InvalidDateValueError(dateString); 
+            else {
+                int maxDays = daysInMonth[m-1];
+                if (m != 2) {
+
+                    if (d < 1 || d > maxDays) throw InvalidDateValueError(dateString); 
+
+                }
+                else {
+                    if (isLeapYear(y)) {
+                        if (d < 1 || d > 29) throw InvalidDateValueError(dateString); 
+                    } else {
+                        if (d < 1 || d > 28) throw InvalidDateValueError(dateString) ;
+                    }
+                }
+            }
+        }
+
+        tm.tm_year = y - 1900; // years since 1900
+        tm.tm_mon  = m - 1;    // months since January [0,11]
+        tm.tm_mday = d;
+        tm.tm_hour = 0;
+        tm.tm_min  = 0;
+        tm.tm_sec  = 0;
+        tm.tm_isdst = 0;
+
+    #if defined(_WIN32)
+        // Windows has _mkgmtime
+        std::time_t t = _mkgmtime(&tm);
+    #else
+        // POSIX
+        std::time_t t = timegm(&tm);
+    #endif
+
+        return DateTime(static_cast<long long>(t), EpochTimestampType::SECONDS);
+    }
+
+        
 };

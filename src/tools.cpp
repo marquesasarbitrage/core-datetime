@@ -180,5 +180,33 @@ namespace DateTimeTools {
         return DateTime(static_cast<long long>(t), EpochTimestampType::SECONDS);
     }
 
-        
+    std::vector<DateTime> getSpecificWeekDayInMonth(int month, int year, int weekDay) {
+
+        std::vector<DateTime> output;
+        try {
+            if (weekDay<0 or weekDay>6) return output;
+            std::string firstDayString = std::to_string(year) + "-" +  std::to_string(month) + "-1";
+            DateTime firstDay = getFromString(firstDayString, "YYYY-MM-DD");
+             int monthBeginWeekDay = firstDay.getCTimeObject().tm_wday;
+            int next;
+            if (monthBeginWeekDay<=weekDay) next = weekDay-monthBeginWeekDay; 
+            else next = 7-monthBeginWeekDay+weekDay;
+
+            
+            output.push_back(firstDay + TimeDelta(next,0,0,0,0,0,0)); 
+            output.push_back(firstDay + TimeDelta(next+7,0,0,0,0,0,0)); 
+            output.push_back(firstDay + TimeDelta(next+14,0,0,0,0,0,0)); 
+            output.push_back(firstDay + TimeDelta(next+21,0,0,0,0,0,0)); 
+
+            DateTime lastDate = firstDay + TimeDelta(next+28,0,0,0,0,0,0);
+            if (lastDate.getCTimeObject().tm_mon+1==month) output.push_back(lastDate); 
+
+            return output;
+
+        } catch (const std::exception& e) {
+
+            return output;
+        }
+    }
+
 };

@@ -16,6 +16,7 @@ namespace DateTimeTools {
     DateTime getMidnightDateTime(const DateTime& date);
     DateTime getYearBeginningDate(const DateTime& date);
     DateTime getFromString(std::string dateString, std::string format);
+    std::vector<DateTime> getSpecificWeekDayInMonth(int month, int year, int day);
 
     class Sequence 
     {

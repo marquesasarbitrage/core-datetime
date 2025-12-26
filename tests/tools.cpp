@@ -221,10 +221,31 @@ void testGetFromString() {
     std::cout << "All string to DateTime tests has been passed." << std::endl; 
 }
 
+void functionTestGetSpecificWeekDayInMonth(int month, int year, int weekDay, std::vector<int> resultInt) {
+
+    std::vector<DateTime> test1 = DateTimeTools::getSpecificWeekDayInMonth(month,year,weekDay);
+    assert(resultInt.size()==test1.size());
+    for (int i =0; i<int(resultInt.size()); i++) { 
+        assert(test1[i].getTimestamp()==resultInt[i]);
+    }
+}
+
+void testGetSpecificWeekDayInMonth() {
+
+    functionTestGetSpecificWeekDayInMonth(1,2026,1,{ 1767571200, 1768176000, 1768780800, 1769385600 });
+    functionTestGetSpecificWeekDayInMonth(1,2026,4,{ 1767225600, 1767830400, 1768435200, 1769040000, 1769644800 });
+    functionTestGetSpecificWeekDayInMonth(7,2027,2,{ 1814832000, 1815436800, 1816041600, 1816646400 });
+
+    std::cout << "All tests for specific week day getters in a month has been passed." << std::endl; 
+}
+
+
 int main()
 {
     testFunctions();
     testSequenceObject();
     testGetFromString();
+    testGetSpecificWeekDayInMonth();
+    std::cout << "All tests for the date time tools has been passed with success." << std::endl;
     return 0; 
 }

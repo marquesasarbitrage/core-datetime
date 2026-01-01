@@ -1,6 +1,6 @@
-# CORE-DATETIME
+# core-datetime
 
-**CORE-DATETIME** is a **C++17 date and time library** designed for **financial and quantitative applications**.  
+**core-datetime** is a **C++17 date and time library** designed for **financial and quantitative applications**.  
 It provides robust, well-defined abstractions for civil dates, timestamps, time intervals, and industry-standard financial conventions.
 
 ---

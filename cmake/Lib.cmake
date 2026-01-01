@@ -1,8 +1,13 @@
 add_library(core-datetime 
     STATIC 
-        src/datetime.cpp
         src/timedelta.cpp
+        src/toolbox.cpp
         src/errors.cpp
-        src/tools.cpp)
+        src/dtconstructor.cpp
+        src/dtoperator.cpp
+        src/dtfunctions.cpp
+        src/sequence.cpp
+        src/daycountconvention.cpp
+        src/businessday.cpp)
 
 target_include_directories(core-datetime PUBLIC include)

@@ -1,15 +1,26 @@
-#include <iostream>
 #include "../include/core-datetime/errors.hpp"
 
-NegativeEpochTimestampError::NegativeEpochTimestampError(): message_(getMessageAsString()){}
-const char* NegativeEpochTimestampError::what() const noexcept { return message_.c_str(); }
-std::string NegativeEpochTimestampError::getMessageAsString() const{ return "The epoch timestamp cannot be negative."; }
+const char* DateTimeLibraryError::what() const noexcept
+{
+    if (cachedMessage_.empty()) {
+            cachedMessage_ = getErrorMessage();  
+        }
+    return cachedMessage_.c_str();
+}
 
+namespace DatetimeErrorRegistry
+{
+    std::string InvalidCivilDateError::getErrorMessage() const {return "The year, month or day given to construct a civil date is invalid.";}
+    
+    std::string InvalidCivilHourError::getErrorMessage() const {return "The hour, minute or second given to construct a civil hour is invalid.";}
 
-InvalidDateFormatError::InvalidDateFormatError(std::string format): format_(format), message_(getMessageAsString()){}
-const char* InvalidDateFormatError::what() const noexcept { return message_.c_str(); }
-std::string InvalidDateFormatError::getMessageAsString() const{ return "The date format " + format_ + " is unknown."; }
+    std::string InvalidDateStringFormatError::getErrorMessage() const {return "The date string format is invalid.";}
 
-InvalidDateValueError::InvalidDateValueError(std::string date): date_(date), message_(getMessageAsString()){}
-const char* InvalidDateValueError::what() const noexcept { return message_.c_str(); }
-std::string InvalidDateValueError::getMessageAsString() const{ return "The date " + date_ + " is invalid and return undefined behaviors."; }
+    std::string UnknownDayCountConventionError::getErrorMessage() const {return "No method is defined to compute the year faction based on given day count convention.";}
+
+    std::string InvalidStartEndDate::getErrorMessage() const {return "Start date cannot be set after the end date.";}
+
+    std::string UnknownBusinessDayConventionError::getErrorMessage() const {return "No method is defined to compute the business day adjustement for the convention given.";}
+
+    std::string UnknownHolidayCalendarError::getErrorMessage() const {return "No method is defined to check if a day is business for the calendar given.";}
+}

@@ -1,66 +1,51 @@
 #pragma once
 #include <iostream>
-#include <ctime>
-#include <string>
-#include "errors.hpp"
+#include <tuple>
+#include "timedelta.hpp"
+#include "toolbox.hpp"
 
-enum class EpochTimestampType {SECONDS = 1, MILLISECONDS = 1000, MICROSECONDS = 1000000, NANOSECONDS = 1000000000 };
+enum class EpochTimestampType {
 
-class TimeDelta
-{
+    SECONDS = 1, 
+    MILLISECONDS = 1000, 
+    MICROSECONDS = 1000000, 
+    NANOSECONDS = 1000000000 
+};
+
+enum class TimeZone {
+
+    UTC = 0, 
+    UTCM1 = -1, UTCP1 = 1,
+    UTCM2 = -2, UTCP2 = 2,
+    UTCM3 = -3, UTCP3 = 3,
+    UTCM4 = -4, UTCP4 = 4,
+    UTCM5 = -5, UTCP5 = 5,
+    UTCM6 = -6, UTCP6 = 6,
+    UTCM7 = -7, UTCP7 = 7,
+    UTCM8 = -8, UTCP8 = 8,
+    UTCM9 = -9, UTCP9 = 9,
+    UTCM10 = -10, UTCP10 = 10,
+    UTCM11 = -11, UTCP11 = 11,
+    UTCM12 = -12, UTCP12 = 12,
+    UTCP13 = 13,
+    UTCP14 = 14,
+    
+};
+
+class DateTime {
+
     public:
-        TimeDelta(long long days, long long hours, long long minutes, long long seconds, 
-            long long milliseconds, long long microseconds, long long nanoseconds);
-        TimeDelta();
-        ~TimeDelta(){};
-
-        long long getTotalSeconds() const;
-        long long getTotalMilliSeconds() const;
-        long long getTotalMicroSeconds() const;
-        long long getTotalNanoSeconds() const;
-        void setDays(long long n);
-        void setHours(long long n);
-        void setMinutes(long long n);
-        void setSeconds(long long n);
-        void setMicroseconds(long long n);
-        void setMilliseconds(long long n);
-        void setNanoseconds(long long n); 
-        TimeDelta operator+(const TimeDelta& other) const;
-        TimeDelta operator-(const TimeDelta& other) const;
-        void operator+=(const TimeDelta& other);
-        void operator-=(const TimeDelta& other);
-        bool operator==(const TimeDelta& other) const;
-        bool operator!=(const TimeDelta& other) const; 
-        bool operator<(const TimeDelta& other) const;
-        bool operator<=(const TimeDelta& other) const;
-        bool operator>=(const TimeDelta& other) const;
-        bool operator>(const TimeDelta& other) const;
-
-    private:
-        long long days_; 
-        long long hours_; 
-        long long minutes_; 
-        long long seconds_; 
-        long long milliseconds_; 
-        long long microseconds_;
-        long long nanoseconds_;
-}; 
-
-class DateTime
-{
-    public:
-
-        DateTime(long long timestamp, EpochTimestampType type);
+        DateTime(TimeZone timeZone);
         DateTime();
+        DateTime(long long timestamp, EpochTimestampType type, TimeZone timeZone);
+        DateTime(long long timestamp, EpochTimestampType type);
+        DateTime(int year, int month, int day, int hour, int minute, int second, TimeZone timeZone);
+        DateTime(int year, int month, int day, TimeZone timeZone);
+        DateTime(int year, int month, int day, int hour, int minute, int second);
+        DateTime(int year, int month, int day);
+        DateTime(std::string dateString, std::string formatString, TimeZone timeZone);
+        DateTime(std::string dateString, std::string formatString); 
         ~DateTime(){};
-
-        long long getTimestamp() const;
-        EpochTimestampType getTimestampType() const;
-        std::tm getCTimeObject() const;
-        std::string asString();
-        DateTime getConvertedTimestampType(const EpochTimestampType type) const;
-        void convertTimestampType(const EpochTimestampType type);
-        void setStringFormat(std::string format); 
 
         DateTime operator+(const TimeDelta& other) const; 
         DateTime operator-(const TimeDelta& other) const; 
@@ -73,14 +58,31 @@ class DateTime
         bool operator<=(const DateTime& other) const; 
         bool operator>=(const DateTime& other) const; 
         bool operator>(const DateTime& other) const; 
+        DateTime operator+(const TimeDelta::Years& other) const; 
+        DateTime operator-(const TimeDelta::Years& other) const; 
+        DateTime operator+(const TimeDelta::Months& other) const; 
+        DateTime operator-(const TimeDelta::Months& other) const; 
+        void operator+=(const TimeDelta::Years& other); 
+        void operator-=(const TimeDelta::Years& other); 
+        void operator+=(const TimeDelta::Months& other); 
+        void operator-=(const TimeDelta::Months& other); 
+
+        long long getTimestamp() const; 
+        std::string asString(std::string dateFormat) const;
+        int getYear() const; 
+        int getDay() const; 
+        int getMonth() const; 
+        DateTime getModifiedTimestampType(EpochTimestampType type) const;
+        EpochTimestampType getTimestampType() const;
+        TimeZone getTimeZone() const;
+
+        void setTimestampType(EpochTimestampType type);
+        void setTimeZone(TimeZone timeZone);
 
     private:
-        void setTimestamp(const long long timestamp);
-        void setTimestampType(const EpochTimestampType type);
         long long tmsp_; 
+        std::tuple<int,int,int,int,int,int> civilTime_;
         EpochTimestampType type_; 
-        std::string str_format_; 
+        TimeZone timeZone_;
+        static long long _getModifiedTimestamp(long long tmsp, int hourOffset, EpochTimestampType type);
 };
-
-
-

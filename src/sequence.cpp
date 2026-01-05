@@ -12,6 +12,8 @@ int DatetimeSequence::getLength() const { return sequence_.size(); }
 
 std::set<DateTime> DatetimeSequence::get() const { return sequence_; }
 
+std::vector<DateTime> DatetimeSequence::getAsVector() const { return std::vector<DateTime>(sequence_.begin(), sequence_.end());}
+
 std::optional<DateTime> DatetimeSequence::getPrevious(const DateTime& date) const {
 
     auto it = sequence_.lower_bound(date);

@@ -12,6 +12,7 @@ class DatetimeSequence {
         virtual ~DatetimeSequence() = default;
 
         std::set<DateTime> get() const; 
+        std::vector<DateTime> getAsVector() const;
         DatetimeSequence getSub(int startIndex, int endIndex) const; 
         DatetimeSequence getSub(const DateTime& startDate, const DateTime& endDate) const; 
 
